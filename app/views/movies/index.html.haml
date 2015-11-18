@@ -4,14 +4,15 @@
 %table#movies
   %thead
     %tr
-      %th Movie Title
+      -#      %th= sortable 'title', 'Movie Title'
+      = sortable_header 'title', 'Movie Title', :id => 'title_header'
       %th Rating
-      %th Release Date
+      = sortable_header 'release_date', 'Release Date', :id => 'release_date_header'      
       %th More Info
   %tbody
     - @movies.each do |movie|
       %tr
-        %td= movie.title 
+        %td=  movie.title 
         %td= movie.rating
         %td= movie.release_date
         %td= link_to "More about #{movie.title}", movie_path(movie)
