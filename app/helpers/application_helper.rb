@@ -15,5 +15,5 @@ module ApplicationHelper
       link_to title, {:sort => column, :direction => direction }, options
     end
   end
-
+  
 end

@@ -12,11 +12,19 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:sort]
-      @movies = Movie.order(sort_column + " " + sort_direction)
-    else
-      @movies = Movie.all
+
+    @movies = Movie.all
+    if params[:ratings]
+      ratings = params[:ratings].keys
+      #@movies = @movies.where({ rating: ratings}) if ! ratings.none?
+      @movies.where!({ rating: ratings}) if ! ratings.none?
     end
+    if params[:sort]
+      @movies.order!(sort_column + " " + sort_direction)
+    end
+#    @all_ratings = @movies.map { |m| m.rating }.uniq
+#    @all_ratings = Movie.only_fields(@movies, :rating)
+    @all_ratings = to_hash_with_checks(Movie.all_ratings)
   end
 
   def new
@@ -49,7 +57,15 @@ class MoviesController < ApplicationController
 
 
   private
-  
+
+  def to_hash_with_checks ratings
+    param_ratings = params[:ratings].nil? ? ratings : params[:ratings].keys
+
+    ratings.map do |rating_name|
+      { :name    => rating_name,  :checked => param_ratings.include?(rating_name)  }
+    end
+  end
+
   def sort_column
     Movie.column_names.include?(params[:sort]) ? params[:sort] : nil
   end
