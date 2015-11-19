@@ -11,9 +11,18 @@ module ApplicationHelper
 
     direction = direction.nil?||direction=='desc' ? 'asc' : 'desc'
 
+    params = filters 
+    params[:sort] = column
+    params[:direction] = direction
     content_tag(:th, {:class => css_classes.join(' ')}) do
-      link_to title, {:sort => column, :direction => direction }, options
+      link_to title, params, options
     end
   end
-  
+
+  # Hash -> String
+  # Given a hash produce a unique string hash encoding for it
+  def hash_hash(h)
+    require 'digest/md5'
+    Digest::MD5.hexdigest(Marshal::dump(h.sort))
+  end
 end
